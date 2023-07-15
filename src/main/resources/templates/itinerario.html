@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/UITemplate :: cabezera">
+<meta charset="ISO-8859-1">
+<title>Buscar Choferes</title>
+
+</head>
+<body>
+		
+<div th:insert="includes/UITemplate :: menu"></div>	
+	<!-- Head-->
+	<div class="container">
+	<div class="container">
+		<h3 class="text-center mt-4">ITINERARIO</h3>
+		<br>
+		<button type="button" class="btn btn-primary mt-5" style="margin-left: 10px; padding: 1em 2em;" data-toggle="modal" data-target="#modeloBuscarChofer" id="btn-nuevo">
+			<i class="far fa-file"></i> Buscar Chofer
+		</button>
+		<button type="button" class="btn btn-primary mt-5" style="margin-left: 10px; padding: 1em 2em;" data-toggle="modal" data-target="#modeloBuscarBus" id="btn-nuevo">
+			<i class="far fa-file"></i> Buscar Bus
+		</button>
+	</div>
+</div>
+
+<br>
+<br>
+				<!--INICIO PRINCIPAL-->
+				<div class="container">
+					<form method="POST" id="idRegistra" action="/itinerario/grabarDos">
+						<input type="hidden" value="0" id="idCodigoUno" name="codigoBH">
+						<input type="hidden" value="0" id="idCodigoBus" name="codigoBus">
+						<input type="hidden" value="0" id="idCodigoChofer" name="codigoChofer">
+						
+						<div class="container">
+							<div class="row">
+								<div class="form-group has-feedback col-md-4">
+									<label for="exampleInputEmail1"><b>PLACA</b></label><br>
+									<i class="fas fa-file-signature form-control-feedback2"></i>
+									<input type="text" class="form-control" id="idPlaca" placeholder="" name="nroplaca" readonly>
+								</div>
+								<div class="form-group has-feedback col-md-4">
+									<label for="exampleInputEmail1"><b>HORARIO</b></label><br>
+									<i class="fas fa-clock form-control-feedback2"></i>
+									<select class="form-control" id="idHorario" name="horas" readonly>
+										<option value=" ">[SELECCIONE HORARIO]</option>
+										<option th:each="data:${horario}" th:utext="${data.horas}" th:value="${data.codigo}"></option>
+									</select>
+								</div>
+								<div class="form-group has-feedback col-md-4">
+									<label for="exampleInputEmail1" class="text-center"><b>DIA DE PARTIDA</b></label><br>
+									<i class="fas fa-calendar-week form-control-feedback2"></i>
+									<input type="text" style="background-color:#aed6f1" class="form-control" id="usr1" name="dia" placeholder="YYYY-MM-DD" autocomplete="off" readonly>
+								</div>
+
+								<div class="form-group has-feedback col-md-4">
+									<label for="exampleInputEmail1"><b>NOMBRE CHOFER</b></label><br>
+									<i class="fas fa-file-signature form-control-feedback2"></i>
+									<input type="text" class="form-control" id="idNombreChofer" placeholder="" name="nombre" readonly>
+								</div>
+								<div class="form-group has-feedback col-md-4">
+									<label for="exampleInputEmail1"><b>CATEGORIA DE BREVETE</b></label><br>
+									<i class="fas fa-file-signature form-control-feedback2"></i>
+									<input type="text" class="form-control" id="idCategoriaBrevete" placeholder="" name="nombre" readonly>
+								</div>
+								<div class="form-group has-feedback col-md-4">
+									<input type="hidden" class="form-control" value="activo" id="idEstado" name="estado">
+								</div>
+								<div class="col-md-12 text-center mt-4">
+									<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i> REGISTRAR</button>
+									<button type="button" class="btn btn-primary" id="btn-limpiarmodal">
+										<i class="fas fa-sync"></i> Limpiar
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--FIN PRINCIPAL-->
+				    
+    		
+				<!--INICIO TABLA ITINERIO-->
+				<div class="container"> 
+					<br>
+					<a class="nav.link float-right" th:href="@{/itinerario/listaUno(format=pdf)}" title="EXPORTAR A PDF" target="_blank">
+					
+					<img class="img-responsive center-box" th:src="@{/static/images/expediente.png}" height="auto">
+					</a>
+					
+					<a class="nav.link float-right" th:href="@{/itinerario/listaUno(format=xlsx)}" title="EXPORTAR A EXCEL" target="_blank">
+						<img class="img-responsive center-box" th:src="@{/static/images/sobresalir.png}" height="auto">
+						
+					</a>
+					<br>
+                    <table class="table table-striped table-bordered mt-5" id="tableBusUno">
+                        <thead>
+                         <tr>
+                              <th>CÓDIGO</th>
+                              <th>PLACA</th>
+                              <th>HORARIO</th>
+                              <th>DÍA DE PARTIDA</th>
+                              <th>NOMBRE DE CHOFER</th>
+                              <th>CATEGORÍA DE BREVETE</th>    
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="row:${bhh}">
+                            <td th:text="${row.codigoBH}"></td>
+                            <td th:text="${row.buses.nroplaca}"></td>
+                            <td th:text="${row.horario.horas}"></td>
+                            <td th:text="${row.dia}"></td>
+                            <td th:text="${row.usuarioU.nombre}"></td>
+                            <td th:text="${row.usuarioU.clasecategoria}"></td>
+                            <td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalEditarBuses"><i class="far fa-edit"></i></a></td>
+                            <td><a class="btn btn-danger btn-eliminar"><i class="far fa-trash-alt"></i></a></td>
+                          </tr>  
+                        </tbody>
+                    </table>
+                </div>
+				</div>
+						</div>
+				<!--FIN TABLA ITINERIO-->
+
+						<!--Modal de BUSCAR CHOFER-->
+						<div class="modal fade" id="modeloBuscarChofer" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-login modal-lg">
+							<div class="modal-content">
+								<div class="modal-header bg-blue-darker">
+									<h4 class="modal-title text-white">BUSCAR CHOFER</h4>
+								</div>
+								<div class="modal-body">
+									<form method="POST" id="idBuscar" action="">
+										<input type="hidden" value="0" id="idCodigo" name="codigo">
+										<div class="container">
+											<div class="row">
+												<div class="form-group has-feedback col-md-4">
+													<label for="exampleInputEmail1"><b>NOMBRE CHOFER</b></label><br>
+													<i class="fas fa-file-signature form-control-feedback2"></i>
+													<input type="text" class="form-control" id="txtChofer" name="nombre" placeholder="Ingresar Nombre">
+												</div>
+												<div class="form-group has-feedback col-md-4">
+													<label for="exampleInputEmail1"><b>CATEGORIA DE BREVETE</b></label><br>
+													<select class="form-control" id="idCategoria" name="categoria">
+														<option value="0">[Seleccione Categoria]</option>
+														<option value="A-IIb">A-IIb</option>
+														<option value="A-IIIa">A-IIIa</option>
+														<option value="A-IIIb">A-IIIb</option>
+														<option value="A-IIIc">A-IIIc</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<button type="button" class="btn btn-info" id="btn-Chofer">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+											<table class="table table-striped table-bordered mt-5" id="tableChofer">
+												<thead>
+													<tr>
+														<th>CÓDIGO</th>
+														<th>NOMBRE</th>
+														<th>NUMERO DE LICENCIA</th>
+														<th>CATEGORÍA DE LICENCIA</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="row:${usuarioU}">
+														<td th:text="${row.codigo}"></td>
+														<td th:text="${row.nombre}"></td>
+														<td th:text="${row.nrolicencia}"></td>
+														<td th:text="${row.clasecategoria}"></td>
+														<td>
+															<button type="button" class="btn btn-warning btn-datos-chofer-buscar-caja">
+																<i class="fas fa-user-plus"></i>
+															</button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-12 text-center mt-4">
+										</div>
+										<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+											<button type="button" class="btn btn-primary" id="btn-limpiarmodal" style="margin-left: 10px; padding: 1em 2em;">
+												<i class="fas fa-sync"></i>
+												Limpiar
+											</button>
+											<button type="button" class="btn btn-danger" id="btn-cerrarmodal" data-dismiss="modal" style="margin-left: 10px; padding: 1em 2em;">
+												<i class="fas fa-times"></i>
+												Cerrar
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>	
+			<!--FIN DE MODAL BUSCAR CHOFER-->
+						
+			<!--VERIFICACIÓN-->
+						
+						
+						<!--Modal de BUSCAR BUS-->
+						<div class="modal fade" id="modeloBuscarBus" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">BUSCAR BUS</h4>
+									</div>
+									
+												<div class="modal-body">
+												<form method="POST" id="idBuscar" action="">	
+												
+												<div class="row">
+													<div class="form-group has-feedback col-md-4">
+													<label for="exampleInputEmail1"><b>PLACA</b></label><br>		
+													<i class="fas fa-file-signature form-control-feedback2"></i>	
+													<input type="text" class="form-control" id="txtBuses" placeholder="Ingresar placa">																										
+													</div>
+                                                    
+													<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>MARCA</b></label><br>
+												        <i class="fas fa-clock form-control-feedback2"></i>
+													    <select class="form-control" id="txtMarca" name="codigoMarca">
+															
+													      <option value=" ">[SELECCIONE MARCA]</option>
+													      <option th:each="data:${marca}"   
+													      		th:utext="${data.nombre}"
+													      		th:value="${data.codigo}"
+													      />
+													    </select>
+                                                        
+                                                    </div>
+                                                    
+													<div class="form-group has-feedback col-md-4">
+                                                        <br>
+                                                        <button type="button" class="btn btn-info" id="btn-buscar-buses">
+                                                            <i class="fas fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                    
+                                                </div>
+										  
+										
+							<div class="container">
+                                <table class="table table-striped table-bordered mt-12" id="tableBus">
+                                    <thead>
+                                     <tr>
+                                          <th>CÓDIGO BUS</th>
+                                         
+                                          <th>PLACA</th>
+                                          <th>MARCA</th>
+                                          <th>AÑO DE FABRICACIÓN</th>
+                                          <th></th>
+                                          
+                                              
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr th:each="row:${buse}">
+                                        <td th:text="${row.codigo}"></td>
+                                        
+                                        <td th:text="${row.nroplaca}"></td>
+                                        <td th:text="${row.marca.nombre}"></td>
+                                        <td th:text="${row.aniofab}"></td>
+                                        <td><button type="button" class="btn btn-warning btn-datos-buses-buscar-caja">
+					 														<i class="bi bi-bus-front-fill"></i>
+					 												 </button></td>             
+                                      </tr>  
+                                    </tbody>
+                                  </table>
+
+                            </div>
+												 	
+							<div class="container">
+											<button type="button" class="btn btn-primary" id="btn-limpiarmodal" style="margin-left: 10px; padding: 1em 2em;">
+											<i class="fas fa-sync"></i>
+										 	Limpiar
+											</button>
+											<button type="button" class="btn btn-danger" id="btn-cerrarmodal"  data-dismiss="modal" style="margin-left: 10px; padding: 1em 2em;">
+											<i class="fas fa-times"></i>
+										 	Cerrar
+										</button>	
+										</div>
+										</div>								
+																																		
+									</form>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>			
+			<!--FIN DE MODAL BUSCAR BUS-->
+
+		
+		
+			<!--Modal de Editar Bus-->
+						<div class="modal fade" id="modalEditarBuses" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">EDITAR BUSES</h4>
+									</div>
+									<h3 class="text-center mt-4">EDITAR BUSES</h3>
+									<br>
+
+			
+								<form method="POST" id="form-editar" action="/busHH/buscarDos">	
+										<div class="container">
+											<div class="row">
+												<div class="form-group has-feedback col-md-4">
+													<label for="exampleInputEmail1"><b>PLACA</b></label><br>		
+													<i class="fas fa-file-signature form-control-feedback2"></i>	
+													<input type="text" class="form-control" id="idPlacaEditar" placeholder="" name="nroplaca" >																										
+													</div>
+													
+												<div class="form-group has-feedback col-md-4">	
+															<label for="exampleInputEmail1"><b>Horario</b></label><br>
+																					        
+															<select class="form-control" id="idHorarioEditar" name="horas">
+															<option value=" ">[Seleccione Horario]</option>
+															<option th:each="data:${horario}"   
+													      		th:utext="${data.horas}"
+													      		th:value="${data.codigo}"
+													      />
+														</select>
+													</div>
+												<div class="form-group has-feedback col-md-4">	
+													<label for="exampleInputEmail1" class="text-center"><b>DIA DE PARTIDA</b></label><br>
+												    <i class="fas fa-calendar-week form-control-feedback2"></i>
+												    <input type="text" style="background-color:#aed6f1" class="form-control idFechaEditar" id="usr1" name="dia"
+												    													   placeholder="YYYY-MM-DD" autocomplete="off" >
+							
+											    	</div>
+												<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>NOMBRE CHOFER</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control" id="idNombreChoferEditar" name="nombre">																										
+												</div>
+												
+												<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>CATEGORIA DE BREVETE</b></label><br>
+												        
+													      <select class="form-control" id="idCategoriaBreveteEditar" name="nombre">
+															<option value="0">[Seleccione Categoria]</option>
+															<option value="A-IIb">A-IIb</option>
+															<option value="A-IIIa">A-IIIa</option>
+															<option value="A-IIIb">A-IIIb</option>
+															<option value="A-IIIc">A-IIIc</option>
+														</select>
+												 </div>
+												
+												
+												
+															
+											
+										</div> 	
+												<div class="col-md-12 text-center mt-4">
+													<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i > ACTUALIZAR</button>
+											<button type="button" id="btn-limpiar" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Cancelar</button>	
+											    </div>
+													<br>
+												<br>
+												<br>
+												<br>
+												
+												
+											</div>
+										</div>								
+																																		
+									</form>
+					<!--Fin Modal de Editar Bus-->
+					
+									</div>
+								</div></div>
+					
+					<div>
+						<form action="/busHH/eliminarDos" method="post" id="form-eliminar"> 
+						<input type="hidden" name="codigoEliminar" id="codigo-eliminar"/>
+						</form>
+					</div>
+					
+<div th:insert="includes/UITemplate :: pie"></div>	
+	<script th:inline="javascript"th:if="${MENSAJE!=null}" >
+			//Recuperar atributo mensaje
+		let msg=/*[[${MENSAJE}]]*/
+		toastr.success(msg, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+		
+	</script>
+	<script>
+			
+		
+		$("#tableChofer").DataTable({
+					"searching":false,
+					"lengthChange":false
+				});
+		$("#tableBus").DataTable({
+					"searching":false,
+					"lengthChange":false
+				});
+
+
+		//Asignar evento click a todos los botones con nombre de clase ".btn-editar"
+		$(document).on("click", ".btn-editar", function () {
+			let cod;
+			//obtener el codigo del medicamento actual según el boton que se presiono
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/itinerario/buscarDos?codigoBH=" + cod, function (response) {
+				//Imprimir en los controles el valor del JSON				
+				$("#idPlacaEditar").val(response.buses.nroplaca);
+				$("#idHorarioEditar").val(response.horario.codigo);
+				
+				$(".idFechaEditar").val(response.dia);
+				$("#idNombreChoferEditar").val(response.usuarioU.nombre);
+				$("#idCategoriaBreveteEditar").val(response.usuarioU.clasecategoria);
+				//$("#idTipo").val(response.tipo.codigo);
+				codigoH=response.horario.horas;
+				
+				//llamar al evento change del combo idLaboratorio
+				
+				console.log(response);
+			})
+		})
+		
+		$(document).on("click","#btn-Chofer",function(){
+			let perrito;
+			perrito=$("#txtChofer").val();
+			//reorganizar tabla
+			$("#tableChofer").DataTable().destroy();
+			$("#tableChofer tbody").empty();
+			$.get("/itinerario/consultaChofer?nombre="+perrito,function(response){
+				$.each(response,function(index,item){
+					$("#tableChofer").append
+							(`<tr><td>${item.cargo.codigo}</td>
+							<td>${item.nombre}</td>
+							<td>${item.nrolicencia}</td>
+							<td>${item.clasecategoria}</td>
+							<td><button type='button' class='btn btn-warning btn-datos-chofer-buscar-caja'>
+					 		<i class='fas fa-user-plus'></i></button></td></tr>`);	
+					
+				})
+				$("#tableChofer").DataTable({
+					"searching":false,
+					"lengthChange":false
+				});
+			})
+		
+		})		
+		$(document).on("click","#btn-buscar-buses",function(){
+			let perro;
+			perro=$("#txtBuses").val();
+			$("#tableBus").DataTable().destroy();
+			$("#tableBus tbody").empty();
+			$.get("/itinerario/consultaBuses?placa="+perro,function(response){
+				//bucle
+				
+				$.each(response,function(index,item){
+					$("#tableBus").append
+							(`<tr><td>${item.codigo}</td>
+							<td>${item.nroplaca}</td>
+							<td>${item.marca.nombre}</td>
+							<td>${item.aniofab}</td>
+							<td><button type='button' class='btn btn-warning btn-datos-buses-buscar-caja'>
+					 		<i class='bi bi-bus-front-fill'></i></button></td></tr>`);	
+					
+				})
+				
+				$("#tableBus").DataTable({
+					"searching":false,
+					"lengthChange":false
+			});
+				
+		})
+		
+		})		
+		
+		
+		
+		$(document).on("click",".btn-datos-buses-buscar-caja",function(){
+			let cod,placa,marca,aniofab;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			placa=$(this).parents("tr").find("td")[1].innerHTML;
+			marca=$(this).parents("tr").find("td")[2].innerHTML;
+			aniofab=$(this).parents("tr").find("td")[3].innerHTML;
+			$("#idCodigoBus").val(cod);
+			$("#idPlaca").val(placa);
+		})
+		$(document).on("click",".btn-datos-chofer-buscar-caja",function(){
+			let cod,nombre,nrolicencia,catlicencia;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			nombre=$(this).parents("tr").find("td")[1].innerHTML;
+			nrolicencia=$(this).parents("tr").find("td")[2].innerHTML;
+			catlicencia=$(this).parents("tr").find("td")[3].innerHTML;
+			$("#idCodigoChofer").val(cod);
+			$("#idNombreChofer").val(nombre);
+			$("#idCategoriaBrevete").val(catlicencia);		
+		})				
+		
+		$(document).on("change","#idCategoria", function () {			
+			let codBrevete;
+			codBrevete=$(this).val();
+			$("#tableChofer").DataTable().destroy();
+			//limpiar combo idTipo
+			$("#tableChofer tbody").empty();
+			
+			$.get("/itinerario/consultaBrevete?codigoBrevete="+codBrevete,function(response){
+				//bucle
+				$.each(response,function(index,item){
+					$("#tableChofer tbody").append
+							(`<tr><td>${item.codigoU}</td>
+							<td>${item.nombre}</td>
+							<td>${item.nrolicencia}</td>
+							<td>${item.clasecategoria}</td>
+							<td><button type='button' class='btn btn-warning btn-datos-chofer-buscar-caja'>
+					 		<i class='fas fa-user-plus'></i></button></td></tr>`);	
+					
+				})
+				$("#tableChofer").DataTable({
+					"searching":false,
+					"lengthChange":false
+				});
+			})		
+		})		
+		
+      
+		$(document).on("change","#txtMarca", function () {
+			
+			let codMarca;
+			codMarca=$(this).val();
+			//limpiar combo idTipo
+			$("#tableBus").DataTable().destroy();
+			$("#tableBus tbody").empty();
+			
+			
+			$.get("/itinerario/consultaMarca?codigoMarca="+codMarca,function(response){
+				//bucle
+				$.each(response,function(index,item){
+					$("#tableBus tbody").append
+							(`<tr><td>${item.codigo}</td>
+							<td>${item.nroplaca}</td>
+							<td>${item.marca.nombre}</td>
+							<td>${item.aniofab}</td>
+							<td><button type='button' class='btn btn-warning btn-datos-buses-buscar-caja'>
+					 		<i class='bi bi-bus-front-fill'></i></button></td></tr>`);	
+					
+				})
+				
+				$("#tableBus").DataTable({
+					"searching":false,
+					"lengthChange":false
+			});
+				
+		})		
+		})		
+				//----ELIMINAR----//
+		$(document).on("click",".btn-eliminar",function(){
+			let cod;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			$("#codigo-eliminar").val(cod);
+			
+			alertify.confirm("SISTEMA","Seguro de eliminar!",
+			  function(){//si
+			  	$("#form-eliminar").submit();
+			  	
+			  },
+			  function(){//no
+				alertify.error('Cancelado!')
+			  }).
+			  set('labels', {ok:'Si', cancel:'No'});
+		})
+		
+		function listarChoferes(){
+			$.get("/bus/usu",function(response){
+				//bucle
+				console.log(response);
+			});
+		}
+		
+	</script>
+	
+	<script>
+		$('#tableBus').DataTable();
+		$(function() {
+			$('#usr1').datepicker({
+				'format': 'yyyy-mm-dd',
+				'autoclose': true
+			});
+	
+		});
+		$('#usr1').on('changeDate show', function(e) {
+		    $('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
+		});
+
+
+	</script>
+	
+	<script type="text/javascript">    
+	    $(document).ready(function(){     
+	
+	        $('#idRegistra').bootstrapValidator({     
+	        	feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	        	 fields:{
+	        		 
+	        		 Nombres: {
+	     	    		selector:'#idNombre',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese nombre'    
+	                        }      
+	                    }    
+	                },   
+	                Descripcion: {
+	     	    		selector:'#idDescripcion',       
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese descripción'    
+	                        }      
+	                    }    
+	                },    
+	                Stock: {
+	     	    		selector:'#idStock',      
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese stock'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^[0-9]{1,2}$/,    
+	                            message: 'Campo stock hasta dos cifras'    
+	                        },   
+	                    }    
+	                },
+	                precio: {
+	     	    		selector:'#idPrecio',      
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese precio'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^(\d+|[0-9]+\.\d{1,2})$/,    
+	                            message: 'Campo precio real hasta dos decimales'    
+	                        },   
+	                    }    
+	                },       				
+	                Fecha: {
+	     	    		selector:'#usr1',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione fecha '    
+	                        },
+	                        date: {
+	                            format: 'YYYY-MM-DD',
+	                            message: 'The format is dd/mm/yyyy'
+	                        },
+	                    }    
+	                },
+	                Tipo: {
+	     	    		selector:'#idTipo',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione tipo medicamento'    
+	                        },					
+	                    }    
+	                } 
+	        	 }
+	        })					
+	    });    
+	</script> 	
+</body>
+</html>

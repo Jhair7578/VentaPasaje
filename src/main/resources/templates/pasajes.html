@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/UITemplate :: cabezera">
+<meta charset="ISO-8859-1">
+<title>Listar Pasajes</title>
+
+</head>
+<body>
+	
+<div th:insert="includes/UITemplate :: menu"></div>	
+	
+	<div class="container">
+		<div class="container">
+		
+			<h3 class="text-center mt-4">LISTA DE PASAJES</h3>
+			
+				<table class="table table-striped table-bordered mt-5" id="tableBus">
+							  <thead>
+							   <tr>
+					                <th>Codigo</th>
+					                <th>Cliente</th>
+					                <th>Placa Bus</th>
+					                <th>Destino</th>
+					                <th></th>
+					            </tr>
+							  </thead>
+							  <tbody>
+								<tr  th:each="row:${pasaj}" >
+							      <td th:text="${row.codigo}"></td>
+							      <td th:text="${row.cliente.nombre}"></td>
+							      <td th:text="${row.itinerario.buses.nroplaca}"></td>
+							      <td th:text="${row.itinerario.buses.rutas.rutaFinal}"></td>
+							      <td><a class="btn btn-info btn-consulta" data-toggle="modal" data-target="#modalPasajes"><i class="far fa-edit"></i></a></td>
+							    </tr>  
+							  </tbody>
+				</table>
+			</div>
+							
+						 <!-- Modal -->
+						<div class="modal fade" id="modalPasajes" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">Boleta</h4>
+									</div>
+									<div class="modal-body">
+									<form method="POST" id="idRegistra" action="/bus/grabar">	
+										<input type="hidden" value="0" id="idCodigo" name="codigo">
+										<div class="container">
+											<div class="row">
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Cliente</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idCliente" name="cliente" disabled>																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>DNI</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDni" name="dni" disabled>																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Partida</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idPartida" name="Partida" disabled>																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Destino</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDestino" name="destino" disabled>																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Dia Partida</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDia" name="dia" disabled>																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Hora Partida	</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idHora" name="hora" disabled>																										
+												</div>
+												<div class="col-md-6">
+											    <label for="inputState" class="form-label">Listado Asientos</label>
+												    <table id="tableAsientos" class="table table-striped" style="width:100%">
+											        <thead>
+											            <tr>
+											                <th>Número</th>
+											                <th>Tipo</th>
+											                <th>Precio</th>
+											            </tr>
+											        </thead>
+											        <tbody>
+											        </tbody>
+											    </table>
+											  </div>
+											  <div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Importe</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idImporte" name="importe" disabled>																										
+												</div>
+												<div class="col-md-12 text-center mt-4"> 										
+											<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i> Grabar</button>
+											<button type="button" id="btn-limpiar" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Cancelar</button>
+										</div> 	
+												
+												
+												
+											</div>
+										</div>								
+																																		
+									</form>
+								</div>
+								</div>
+							</div>
+						</div>
+	  <!-- FIN MODAL -->
+	
+	</div>
+	
+	<div th:insert="includes/UITemplate :: pie"></div>	
+	
+	<script th:inline="javascript"th:if="${MENSAJE!=null}" >
+		//Recuperar atributo mensaje
+		let msg=/*[[${MENSAJE}]]*/
+		toastr.success(msg, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+		
+	</script>
+		
+	<script>
+		$(document).on("click",".btn-consulta",function(){
+			let cod;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			$.get("/pasaje/buscarPasaje?codigo="+cod,function(datos){
+				$("#idCliente").val(datos.cliente.nombre+" "+datos.cliente.apellido);
+				$("#idDni").val(datos.cliente.dni);
+				$("#idPartida").val(datos.itinerario.buses.rutas.rutaInicio);
+				$("#idDestino").val(datos.itinerario.buses.rutas.rutaFinal);
+				$("#idDia").val(datos.itinerario.dia);
+				$("#idHora").val(datos.itinerario.horario.horas);
+				$("#idImporte").val(datos.monto);
+			})	
+			
+			$.get("/pasaje/pruebas?codigo="+cod,function(datos){
+				console.log(datos);
+				$("#tableAsientos tbody").empty();
+				$.each(datos,function(index,item){
+					$("#tableAsientos").append(`<tr><td>${item.asiento.numeroAsi}</td><td>
+												${item.asiento.tipoAsiento.descripcion}</td><td>
+												${item.asiento.tipoAsiento.precio}</td><tr>`);
+				})
+			})
+					
+		})
+		
+		
+	</script>
+	
+	<script type="text/javascript">    
+	    $(document).ready(function(){     
+	
+	        $('#idRegistra').bootstrapValidator({     
+	        	feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	        	 fields:{
+	        		 
+					 
+					 Cliente:{
+						 selector:'#idCliente',
+						 validators:{
+							 notEmpty:{
+								 message:'Ingrese cliente'
+							 }
+						 }
+					 },
+					 
+					  Placa:{
+						 selector:'#idPlaca',
+						 validators:{
+							 notEmpty:{
+								 message:'Ingrese placa'
+							 },
+	                        regexp: {    
+	                            regexp: /^[A-Z]{3}-[0-9]{3}$/,    
+	                            message: 'el formato es letras con numeros'    
+	                        }, 
+						 }
+					 },
+					 
+					 Destino:{
+						 selector:'#idDestino',
+						 validators:{
+							 notEmpty:{
+								 message:'Ingrese placa'
+							 }
+						 }
+					 }
+  
+	                
+	        	 }
+	        })					
+	    });    
+	</script>
+	
+</body>
+</html>

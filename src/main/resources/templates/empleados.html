@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/UITemplate :: cabezera">
+<meta charset="ISO-8859-1">
+<title>Registrar Empleados</title>
+
+
+</head>
+<body>
+	
+<div th:insert="includes/UITemplate :: menu"></div>	
+
+	<div class="container">
+		<div class="container">
+		
+			<h3 class="text-center mt-4">LISTA DE EMPLEADOS</h3>
+			
+			<button type="button" class="btn btn-primary mt-5" data-toggle="modal" data-target="#modalEmpleado" id="btn-nuevo" onclick="mostrarUserPass()">
+			 <i class="far fa-file"></i> Nuevo Empleado
+			</button>
+			<br>
+			<br>
+			  <br>
+			<a class="nav.link float-right" th:href="@{/usuario/lista(format=pdf)}" title="EXPORTAR A PDF" target="_blank">
+			
+			<img class="img-responsive center-box" th:src="@{/static/images/expediente.png}" height="auto">
+			</a>
+			
+			<a class="nav.link float-right" th:href="@{/usuario/lista(format=xlsx)}" title="EXPORTAR A EXCEL" target="_blank">
+				<img class="img-responsive center-box" th:src="@{/static/images/sobresalir.png}" height="auto">
+				
+			</a>
+			<br>
+			
+				<table class="table table-striped table-bordered mt-5" id="tableEmpleado">
+							  <thead>
+							   <tr>
+					                <th>Codigo</th>
+					                <th>Cargo</th>
+					                <th>Nombre</th>
+					                <th>Apellido</th>
+					                <th>DNI</th>
+					                <th>Fecha</th>
+					                <th>Celular</th>
+					                <th></th>
+					                <th></th>
+					            </tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="row:${usuarios}">
+							      <td th:text="${row.codigo}"></td>
+							      <td th:text="${row.cargo.nombre}"></td>
+							      <td th:text="${row.nombre}"></td>
+							      <td th:text="${row.apellido}"></td>
+							      <td th:text="${row.dni}"></td>
+							      <td th:text="${row.fecha}"></td>
+							      <td th:text="${row.celular}"></td>
+							      <td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalEmpleado"><i class="far fa-edit"></i></a></td>
+							      <td><a class="btn btn-danger btn-eliminar"><i class="far fa-trash-alt"></i></a></td>
+							    </tr>  
+							  </tbody>
+				</table>
+			</div>
+						
+						
+						
+						
+						<!--Modal de Empleado-->
+						<div class="modal fade" id="modalEmpleado" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">Empleado</h4>
+									</div>
+									<div class="modal-body">
+									<form method="POST" id="idRegistra" action="/usuario/grabar">	
+										<input type="hidden" value="0" id="idCodigo" name="codigo">
+										<div class="container">
+											<div class="row">
+												<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>Nombre</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idNombre" placeholder="Ingresar nombre" name="nombre">																										
+												</div>
+												
+												<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>Apellidos</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idApellido" placeholder="Ingresar Apellido" name="apellido">																										
+												</div>
+												
+												<br>
+												<br>
+												<br>
+												<br>
+												<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Cargo</b></label><br>
+												        
+													    <select class="form-control" id="idCargo" name="cargo">
+													      <option value="0">[Seleccione Cargo]</option>
+													      <option th:each="data:${cargo}"
+													      		  th:utext="${data.nombre}"
+													      		  th:value="${data.codigo}"
+													      />
+													    </select>
+												 </div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>DNI</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDni" placeholder="Ingresar Dni" name="dni">																										
+												</div>
+												
+												<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Sexo</b></label><br>
+												        
+													    <select class="form-control" id="idSexo" name="sexo">
+													      <option value=" ">[Seleccione Sexo]</option>
+													      <option value="Masculino">Masculino</option>
+													      <option value="Femenino">Femenino</option>
+													    </select>
+													   
+												 </div>		
+												 
+												<div class="form-group has-feedback col-md-4">	
+													<label for="exampleInputEmail1" class="text-center"><b>Fecha de Nacimiento</b></label><br>
+												    <i class="fas fa-calendar-week form-control-feedback2"></i>
+												    <input type="text" style="background-color:#aed6f1" class="form-control" id="usr1" name="fechaNac"
+												    													   placeholder="YYYY-MM-DD" autocomplete="off" >
+							
+											    </div>
+												
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Celular</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idCelular" placeholder="Ingresar Celular" name="celular">																										
+												</div>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>Correo</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idCorreo" placeholder="Ingresar Correo" name="correo">																										
+												</div>
+												
+												 	<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Departamento</b></label><br>
+												        
+													    <select class="form-control" id="idDepartamento" name="departamento">
+													      <option value="0">[Seleccione Departamento]</option>
+													      
+													    </select>
+													   
+												 	</div>
+												 	<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Provincia</b></label><br>
+												        
+													    <select class="form-control" id="idProvincia" name="provincia">
+													      <option value="0">[Seleccione Provincia]</option>													     
+													    </select>
+													   
+												 	</div>
+												 	<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Distrito</b></label><br>
+												        
+													    <select class="form-control" id="idDistrito" name="distrito">
+													      <option value="0">[Seleccione Distrito]</option>												     
+													    </select>
+													   
+												 	</div>
+												 	<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>Nombre</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idLicencia" placeholder="Ingresar Nro Licencia" name="licencia">																										
+												</div>
+												<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Categoria Licencia</b></label><br>
+												        
+													     <select class="form-control" id="idCategoria" name="categoria">
+													      <option value=" ">[Seleccione Categoria]</option>
+													      <option value="A-IIb">A-IIb</option>
+													      <option value="A-IIIa">A-IIIa</option>
+													      <option value="A-IIIb">A-IIIb</option>
+													      <option value="A-IIIc">A-IIIc</option>
+													    </select>
+												 </div>
+												<!-- Provicional hasta que encuentre una manera que sea autoqgenerado y se pueda mandar al correo-->
+												 <div class="form-group has-feedback col-md-6" id="div-Usuario">
+														<label for="exampleInputEmail1"><b>Usuario</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idUsuario" placeholder="Ingresar Usuario" name="usuario">																										
+												</div>
+												
+												<div class="form-group has-feedback col-md-6" id="div-Contrasena">
+														<label for="exampleInputEmail1"><b>Contraseña</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="password" class="form-control"  id="idContraseña" placeholder="Ingresar Contraseña" name="contraseña">																										
+												</div>
+												<!--//////////////////////////////////////////////////////////////////////////////////////////////-->
+												<br>
+												<br>
+												<br>
+												<br>
+												<div class="col-md-12 text-center mt-4"> 										
+											<button type="submit" id="idGrabar" class="btn btn-primary"><i class="fas fa-save"></i> Grabar</button>
+											<button type="button" id="idCancelar" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Cancelar</button>
+										</div> 	
+												
+												
+												
+											</div>
+										</div>								
+																																		
+									</form>
+								</div>
+								</div>
+							</div>
+						</div>
+						<!--Fin del Modal de Empleado-->
+						
+						
+	<!-- Crear un form q almacene el codigo a eliminar-->	
+	<form action="/usuario/eliminar" method="post" id="form-eliminar"> 
+		<input type="hidden" name="codigoEliminar" id="codigo-eliminar"/>
+	</form>
+			
+		
+	
+	</div>
+	<div th:insert="includes/UITemplate :: pie"></div>	
+	
+	<script th:inline="javascript"th:if="${MENSAJE!=null}" >
+		//Recuperar atributo mensaje
+		let msg=/*[[${MENSAJE}]]*/
+		toastr.success(msg, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+		
+	</script>
+	
+	<script>	
+		
+		$(document).ready(function () {		
+		// Detectar cambio en el select de cargo
+		$('#idCargo').change(function () {
+			var cargoSeleccionado = $(this).val();
+				if (cargoSeleccionado !== '6') {
+					// Desactivar inputs
+					$('#idLicencia').prop('disabled', true);
+					$('#idCategoria').prop('disabled', true);
+				} else {
+					// Habilitar inputs
+					$('#idLicencia').prop('disabled', false);
+					$('#idCategoria').prop('disabled', false);
+				}
+			});
+		});
+		
+
+			function ocultarUserPass() {
+			  var user = document.getElementById("div-Usuario");
+			  var pass = document.getElementById("div-Contrasena");
+
+			  user.style.display = "none";
+			  pass.style.display = "none";
+			}
+			function mostrarUserPass() {
+			  var user = document.getElementById("div-Usuario");
+			  var pass = document.getElementById("div-Contrasena");
+
+			  user.style.display;
+			  pass.style.display;
+			}
+			
+		//GLOBALES
+		let provincia="";
+		let distrito=-1;
+
+		//----EDITAR----//
+		$(document).on("click",".btn-editar",function(){
+			let cod;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			ocultarUserPass()
+			$.get("/usuario/buscar?codigo="+cod,function(datos){
+				$("#idCodigo").val(datos.codigo);
+				$("#idNombre").val(datos.nombre);
+				$("#idApellido").val(datos.apellido);
+				$("#idCargo").val(datos.cargo.codigo);
+				$("#idCelular").val(datos.celular);
+				$("#idDni").val(datos.dni);
+				$("#usr1").val(datos.fecha);
+				$("#idCorreo").val(datos.correo);
+				$("#idSexo").val(datos.sexo);
+				$("#idLicencia").val(datos.nrolicencia);
+				$("#idCategoria").val(datos.clasecategoria);			
+				$("#idUsuario").val(datos.login);
+				$("#idContraseña").val(datos.password);
+				$("#idDepartamento").val(datos.ubigeoUsuario.departamento);
+				
+				$("#idCargo").trigger("change");
+				//console.log(datos);
+				$("#idDepartamento").trigger("change");	
+						
+				provincia=datos.ubigeoUsuario.provincia;
+				distrito=datos.ubigeoUsuario.codigo;
+				
+				console.log(datos);
+			})
+		})		
+	
+		//----ELIMINAR----//
+		$(document).on("click",".btn-eliminar",function(){
+			let cod;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			$("#codigo-eliminar").val(cod);
+			
+			alertify.confirm("SISTEMA","Seguro de eliminar este empleado!",
+			  function(){//si
+			  	$("#form-eliminar").submit();
+			  	
+			  },
+			  function(){//no
+				alertify.error('Cancelado!')
+			  }).
+			  set('labels', {ok:'Si', cancel:'No'});
+		})
+
+		//----UBIGEO----//
+		$.get("/ubigeo/listaDepartamento",function(datos){
+			$.each(datos,function(index,item){
+				                           //solo se pone item ya que es un arrayList y no un objeto
+				$("#idDepartamento").append("<option value='"+item+"'>"+item+"</option>");
+			});
+		});
+		                                          //function() -->funcion anonima  
+		$(document).on("change","#idDepartamento",function(){
+		var dep;
+		dep=$(this).val();
+		
+		$("#idProvincia").empty();
+		$("#idProvincia").append("<option value='0'>[Seleccione Provincia]</option>");
+		$("#idDistrito").empty();
+		$("#idDistrito").append("<option value='0'>[Seleccione Distrito]</option>");
+		
+			$("#idProvincia").prop("selectedIndex", 0);	
+			$("#idDistrito").prop("selectedIndex", 0);	
+		$.get("/ubigeo/listaProvincia?departamento="+dep,function(datos){
+			$.each(datos,function(index,item){
+				$("#idProvincia").append("<option value='"+item+"'>"+item+"</option>");
+			})
+			
+				if(provincia == "" && distrito==-1){		
+					$("#idProvincia").prop("selectedIndex", 0);	
+					$("#idDistrito").prop("selectedIndex", 0);
+				}
+				if(provincia != "" && distrito!=-1){
+					$("#idProvincia").val(provincia);
+					$("#idProvincia").trigger("change");
+				}
+			})
+		})
+		
+		$(document).on("change","#idProvincia",function(){
+		var pro;
+		pro=$(this).val();
+		
+		$("#idDistrito").empty();
+		$("#idDistrito").append("<option value='0'>[Seleccione Distrito]</option>");
+					$("#idDistrito").prop("selectedIndex", 0);	
+
+		$.get("/ubigeo/listaDistrito?provincia="+pro,function(datos){
+			$.each(datos,function(index,item){
+				$("#idDistrito").append("<option value='"+item.codigo+"'>"+item.distrito+"</option>");
+			})
+				if(distrito==-1){
+				$("#idDistrito").prop("selectedIndex", 0);
+				}
+				if(distrito!=-1){
+					$("#idDistrito").val(distrito);	
+				}		
+			})
+		})
+		//----FIN UBIGEO----//
+				
+		//----CERRAR----//
+		$(document).on("click","#idCancelar",function(){
+			$("#idRegistra").trigger("reset");
+			$("#idCodigo").val(0);
+			$("#idCargo").prop("selectedIndex", 0);	
+			//$("#idDepartamento").value();
+			$("#idRegistra").data("bootstrapValidator").resetForm(true);
+		})
+		
+		//----CERRAR----//
+		$(document).on("click","#idCancelar",function(){
+			$("#idRegistra").data("bootstrapValidator").resetForm(true);
+			$("#idRegistra").trigger("reset");
+			$("#idCodigo").val(0);
+			$("#idCargo").val(0);
+			$("#idSexo").val();			
+			$("#idDepartamento").val(0);
+			provincia="";
+			distrito=-1;
+			//$("#idDepartamento").value();
+			
+		})
+
+	</script>
+	
+	<script>
+		$('#tableEmpleado').DataTable();
+		$(function() {
+			$('#usr1').datepicker({
+				'format': 'yyyy-mm-dd',
+				'autoclose': true
+			});
+	
+		});
+		$('#usr1').on('changeDate show', function(e) {
+		    $('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
+		});
+
+	</script>
+<script type="text/javascript">    
+	    $(document).ready(function(){     
+	
+	        $('#idRegistra').bootstrapValidator({     
+	        	feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	        	 fields:{					
+	        		 
+	        		 Nombres: {
+	     	    		selector:'#idNombre',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese nombre'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^[A-Za-záéíóúñÁÉÍÓÚÑ\s]{3,30}$/,    
+	                            message: 'Campo nombre solo acepta letras MIN : 3 - MAX : 30',   
+	                        },      
+	                    }    
+	                },
+	                 
+	                 Apellido: {
+	     	    		selector:'#idApellido',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese apellido'    
+	                         },
+	                        regexp: {    
+	                            regexp: /^[A-Za-záéíóúñÁÉÍÓÚÑ\s]{3,30}$/,    
+	                            message: 'Campo apellido solo acepta letras  MIN : 3 - MAX : 30'    
+	                        },       
+	                    }    
+	                },
+	                
+	                 Cargo: {
+	     	    		selector:'#idCargo',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione cargo'    
+	                        }
+	                              
+	                    }    
+	                },
+	                 
+	                 Celular: {
+	     	    		selector:'#idCelular',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese celular'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^[0-9]{9}$/,    
+	                            message: 'Campo celular requiere 9 digitos'    
+	                        },   
+	                    }          
+	                       
+	                },
+	                
+	                Dni: {
+	     	    		selector:'#idDni',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese Dni'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^[0-9]{8}$/,    
+	                            message: 'Campo DNI requiere 8 digitos'    
+	                        },      
+	                    }    
+	                }, 
+	                
+	                Fecha: {
+	     	    		selector:'#usr1',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione fecha '    
+	                        },
+	                        date: {
+	                            format: 'YYYY-MM-DD',
+	                            message: 'El formato es dd/mm/yyyy'
+	                        },
+	                    }    
+	                },
+	                
+	                 Correo: {
+	     	    		selector:'#idCorreo',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese Correo Electronico'    
+	                        },
+	                        regexp: {    
+	                            regexp: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,    
+	                            message: 'seguir el formato con el @'    
+	                        },       
+	                    }    
+	                }, 
+	                
+	                 Sexo: {
+	     	    		selector:'#idSexo',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione Sexo'    
+	                        }      
+	                    }    
+	                }, 
+	                
+	                 Usuario: {
+	     	    		selector:'#idUsuario',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese Usuario'    
+	                        }      
+	                    }    
+	                }, 
+	                
+	                 Contraseña: {
+	     	    		selector:'#idContraseña',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Ingrese Contraseña'    
+	                        }      
+	                    }    
+	                },
+	                
+	                 Departamento: {
+	     	    		selector:'#idDepartamento',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione Departamento'    
+	                        }      
+	                    }    
+	                },
+	                
+	                  Provincia: {
+	     	    		selector:'#idProvincia',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione Provincia'    
+	                        }      
+	                    }    
+	                },
+	                
+	                  Distrito: {
+	     	    		selector:'#idDistrito',   
+	                    validators: {    
+	                        notEmpty: {    
+	                            message: 'Seleccione Distrito'    
+	                        }      
+	                    }    
+	                }    
+	                  
+	            
+	        	 }
+	        })					
+	    });    
+	</script>
+</body>
+</html>

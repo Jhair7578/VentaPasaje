@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="cabezera">
+<meta charset="ISO-8859-1">
+<title>Menu Principal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	
+	<style>
+		.asiento-seleccionado {
+		    background-color: #2E86C1;  /* Azul claro en formato hexadecimal */
+		    color: white;  /* Color de letra blanco */
+		}
+		.asiento-vendido {
+		    background-color: #f2f2f2; /* Color de fondo gris claro */
+		    pointer-events: none;
+		    display: true;
+		}
+
+		.modal-header,
+		h4,
+		.close {
+			background-color: #286090;
+			color: white !important;
+			text-align: center;
+			font-size: 20px;
+		}
+
+		.help-block {
+			color: red;
+			/*display: none;*/
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+
+		.alertify .ajs-dialog {
+			top: 50%;
+			transform: translateY(-50%);
+			margin: auto;
+		}
+
+		.ajs-header {
+			background-color: #286090 !important;
+			color: white !important;
+			/*text-align: center;*/
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.ajs-ok {
+			color: #fff;
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.ajs-cancel {
+			color: #fff;
+			background-color: #dc3545;
+			border-color: #dc3545;
+		}
+
+		.btn-primary {
+			background-color: #286090 !important;
+		}
+
+		.dataTables_length,
+		.dataTables_info {
+			display: none;
+		}
+
+		.modal-lg,
+		.modal-xl {
+			max-width: 900px;
+			max-height: 800px;
+		}
+
+		.form-control-feedback2 {
+			margin: 1px;
+			position: absolute;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
+		.form-control-feedback3 {
+			margin: 1px;
+			position: absolute;
+			margin-left: 225px;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
+		.form-control {
+			padding-left: 40px !important;
+		}
+
+		/*.toast-succes{
+		width: 120px;
+	}*/
+	
+	/*STYLOS ASIENTOS*/
+	.bus__content_one {
+  border: 1px solid #000;
+  background: #e5e5e5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.bus__content_two {
+  background: #ececec;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.bus__content_side_header {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e5e5e5;
+  gap: 0.75rem;
+  border-radius: 17px;
+}
+
+.bus__content_side_header p:nth-child(1) {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.bus__content_side_header p:nth-child(2) {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.bus__content_side_box {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.bus__content_side_box p {
+  margin: 0;
+  padding: 0;
+  font-size: auto;
+}
+
+.bus__content_side_box p:nth-child(1) {
+  padding-left: 1.1rem;
+  border-bottom: 1px solid #e5e5e5;
+  width: 100%;
+}
+
+.bus__content__container_side {
+  width: 100%;
+  height: 50rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 17px;
+  margin-top: 10px;
+  padding: 3rem;
+}
+
+.bus__content__container_side__one_container_one {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.bus__content__container_side_container_one {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  width: 39%;
+  height: 100%;
+}
+.bus__content__container_side_container_three {
+  margin: 0;
+  padding: 0;
+  width: 35%;
+  height: 100%;
+  gap: 0.75rem;
+  display: flex;
+  /* align-items: flex-start; */
+  justify-content: flex-end;
+  /* justify-content: center; */
+  flex-wrap: wrap;
+}
+@media (max-width: 1200px) {
+  .bus__content__container_side_container_one {
+    width: 45%;
+  }
+  .bus__content__container_side_container_three {
+    width: 35%;
+  }
+}
+
+@media (max-width: 991px) {
+  .bus__content__container_side {
+    padding: 0.75rem;
+  }
+  .bus__content__container_side_container_one {
+    width: 25%;
+  }
+  .bus__content__container_side_container_three {
+    justify-content: center;
+    width: 25%;
+  }
+}
+
+@media (max-width: 573px) {
+  .bus__content__container_side_container_three,
+  .bus__content__container_side_container_one {
+    width: 35%;
+  }
+}
+
+@media (max-width: 500px) {
+    .bus__content__container_side_container_three,
+    .bus__content__container_side_container_one {
+      width: 45%;
+    }
+  }
+
+.bus__content__container_side_container_two {
+  width: 65%;
+  gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+	</style>
+</head>
+<body>
+<!--crear fragmento "cabecera" -->
+<div th:fragment="menu">
+		<div class="pos-f-t">
+			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+				  <div class="navbar-header">
+					   <div class="navbar-header">
+						    <a href="#"class="logo1">RES</a>
+    						<a href="#"class="logo2">BUS</a>
+						</div>
+				</div>
+			  <div class="collapse navbar-collapse">
+				   <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="padding-left: 30px;">
+						<li class="nav-item" th:each="row:${session.menu}">
+						  <a class="nav-link"th:text="${row.nombre}"
+						  					 th:href="${row.url}"></a>
+						</li>
+				
+				  </ul>
+				   
+				  <div class="navbar-nav ml-auto">
+					  <div class="flex" style="width:200px!important;padding-top: 10px;font-weight:bold ">
+			      		<span class="text-white">Usuario: </span><span class="text-white" th:text="${session.datosUsuario}"></span>
+			      		<span class="text-white" th:text="${session.cargo}"></span>
+			      	  </div>
+					  <span class="nav-item nav-link"></span>  
+					  <form method="post" th:action="@{/logout}"> 
+								<input type="submit" class="btn btn-success" value="Cerrar sesión">
+					  </form>
+				  </div>
+			</div>
+			</nav>
+		</div>
+</div>
+
+
+<div th:fragment="pie">		
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+			crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+	<script src="https://kit.fontawesome.com/08aaa156fb.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.3.0/alertify.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.3.0/alertify.js"></script>
+</div>
+
+</body>
+</html>
+
+
+    
+
+    
+

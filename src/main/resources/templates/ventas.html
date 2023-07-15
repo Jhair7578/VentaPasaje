@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/UITemplate :: cabezera">
+<meta charset="ISO-8859-1">
+<title>Registrar pasajes</title>
+
+</head>
+<body>
+	
+<div th:insert="includes/UITemplate :: menu"></div>	
+	
+	<div class="container">
+		
+			<h3 class="text-center mt-4">Registrar Pasajes</h3>
+			
+				<div class="row" >					
+							<div class="modal-content">
+								<div class="modal-header bg-blue-darker">
+								</div>
+								<div class="modal-body">
+									<form method="POST" id="idVender" th:action="@{/pasaje/grabar}" >	
+										<input type="hidden" value="0" id="idCodigo" name="codigo">
+										<input type="hidden" value="0" id="idCodigoCliente" name="codigoCliente">
+										<input type="hidden" value="0" id="idCodigoItinerario" name="codigoItinerario">
+										<div class="container">
+											<div class="row">
+												<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>Nombre</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idNombre" placeholder="Ingresar nombre" name="nombre" readonly>																										
+												</div>
+												<div class="form-group has-feedback col-md-6">
+														<label for="exampleInputEmail1"><b>Apellidos</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idApellidos" placeholder="Ingresar Apellido" name="apellidos" readonly>																										
+												</div>
+												
+												<br>
+												<br>
+												<br>
+												<br>
+												<div class="form-group has-feedback col-md-4">
+														<label for="exampleInputEmail1"><b>DNI</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDni" placeholder="Ingresar Dni" name="dni" readonly>																										
+												</div>
+																						
+												<br>
+												<br>
+												<br>
+												<br>
+												<div class="form-group has-feedback col-md-5">
+														<label for="exampleInputEmail1"><b>Destino</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idDestino" placeholder="" name="destino" readonly>																										
+												</div>
+												<div class="form-group has-feedback col-md-5">
+														<label for="exampleInputEmail1"><b>Placa bus</b></label><br>		
+														<i class="fas fa-file-signature form-control-feedback2"></i>	
+														<input type="text" class="form-control"  id="idPlaca" placeholder="" name="placa" readonly>																										
+												</div>
+												<br>
+												<br>
+												<button type="button" class="btn btn-primary" id="btn-cargarAsientos" style="margin-left: 15px;">
+			 										<i class="bi bi-arrow-clockwise"></i> Cargar Asientos
+												</button>	
+												<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCliente" id="btn-cliente" style="margin-left: 15px;">
+			 									<i class="bi bi-search"></i> Buscar Cliente
+												</button>
+												<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalIntinerario" id="btn-itinerario" style="margin-left: 15px;">
+			 										<i class="bi bi-search"></i> Seleccionar Itinerario
+												</button> 
+												<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>FINALIZAR COMPRA</button>
+									
+												
+											</div>
+										</div>								
+										<div class="col-md-12 text-center mt-4">										
+												<div class="container mt-1">
+										        <div class="row">
+										            <div class="col-12 col-sm-12 col-lg-3 d-flex justify-content-start align-items-start">
+										                <div class="bus__content_one">
+										                    <div class="d-flex flex-column justify-content-center align-items-center w-100" id="idVistaItinerario">
+										                        <p >Partida -> Destino</p>
+										                        <p> Fecha Partida</p>
+										                        <p > yyyy-mm-dd hh:mm</p>
+										                    </div>
+										                </div>
+										            </div>
+										            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+										                <div class="bus__content_side_header">
+										                    <p>Piso 1</p>
+										                    <p>Semi Cama 140°</p>
+										                </div>
+										
+										                <!-- Seccion de los asientos -->
+										                <div class="bus__content__container_side" id="div-Asientos">
+															 <!-- DIV ECONOMICO-->
+										                    <div class="bus__content__container_side__one_container_one" >
+										                        <div class="bus__content__container_side_container_one"  id="div-asientos-economicos-fila1">
+										                            <!-- ASIENTOS Fila 1-->
+										                            
+										                        </div>
+										                        <div class="bus__content__container_side_container_one" id="div-asientos-economicos-fila2">
+										                            <!-- ASIENTOS Fila 2-->
+										                           
+										                        </div>
+										                    </div>
+										                    <div class="bus__content_side_header mt-3 mb-3">
+										                        <p>Piso 2</p>
+										                        <p>Cama 160°</p>
+										                    </div>
+										                    <div class="bus__content__container_side__one_container_one">
+															    <!-- DIV VIP-->
+										                        <div class="bus__content__container_side_container_one" id="div-asientos-vip">
+										                            <!-- ASIENTOS Fila 1-->
+										                            
+										                        </div>
+										                        <!-- DIV EJECUTIVO-->
+										                        <div class="bus__content__container_side_container_three" id="div-asientos-ejecutivo">
+										                            
+										                        </div>
+										                    </div>
+										
+										
+										                </div>
+										            </div>
+										            <!--  -->
+										            <div class="col-12 col-sm-12 col-lg-3 d-flex justify-content-end align-items-start" method="POST" th:action="@{/pasaje/grabar}">
+										                <div class="bus__content_two" id="table-detalle">
+															<p>  Asiento Seleccionado</p>
+															<p id="asiento">
+																										
+															</p>
+															<p>PRECIO TOTAL</p>
+															<input type="text" class="form-control" id="idImporte" name="importe" value="0.00" >
+										                </div>
+														
+										            </div>
+										        </div>
+										    </div>
+										</div> 																								
+									</form>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						
+						<!--Modal de Cliente-->
+						<div class="modal fade" id="modalCliente" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">Buscar Cliente</h4>
+									</div>
+									<div class="modal-body">
+										<form method="POST" id="tableClienteModal" action="">	
+											<div class="container">
+												<div class="row">
+													<div class="form-group has-feedback col-md-6">
+															<label for="exampleInputEmail1"><b>Nombre</b></label><br>		
+															<i class="fas fa-file-signature form-control-feedback2"></i>	
+															<input type="text" class="form-control"  id="idNombreModal" placeholder="Ingresar nombre" name="nombremodal">																										
+													</div>
+													<div class="form-group has-feedback col-md-6">
+															<label for="exampleInputEmail1"><b>DNI</b></label><br>		
+															<i class="fas fa-file-signature form-control-feedback2"></i>	
+															<input type="text" class="form-control"  id="idDniModal" placeholder="Ingresar DNI" name="dnimodal">																										
+													</div>
+													<button type="button" class="btn btn-primary" id="btn-buscarCliente" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="bi bi-search"></i>
+					 								Buscar
+													</button>
+													<button type="button" class="btn btn-primary" id="btn-limpiarClientemodal" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="fas fa-sync"></i>
+				 									Limpiar
+													</button>
+													<button type="button" class="btn btn-danger" id="btn-cerrarCliente"  data-dismiss="modal" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="fas fa-times"></i>
+				 									Cerrar
+													</button>
+													
+													<table class="table table-bordered mt-5" id="tableCliente">
+																  <thead>
+																   <tr>
+														                <th>Codigo</th>
+														                <th>Nombre</th>
+														                <th>Apellido</th>
+														                <th>DNI</th>
+														                <th>Celular</th>
+														                <th></th>
+														            </tr>
+																  </thead>
+																  <tbody>
+																	<tr th:each="row:${cliente}">
+																      <td th:text="${row.codigo}"></td>
+																      <td th:text="${row.nombre}"></td>
+																      <td th:text="${row.apellido}"></td>
+																      <td th:text="${row.dni}"></td>
+																      <td th:text="${row.celular}"></td>
+																      <td><button type="button" class="btn btn-warning btn-datos-cliente">
+					 														<i class="fas fa-user-plus"></i>
+					 												 </button></td>
+																    </tr>  
+																  </tbody>
+													</table>
+													
+													
+													
+												</div>
+											</div>								
+																																			
+										</form>
+										
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--Fin del Modal de Cliente-->
+						
+						
+						<!--Modal de Buses-->
+						<div class="modal fade" id="modalIntinerario" data-backdrop="static" 
+							data-keyboard="false" tabindex="-1" 
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-login modal-lg" >					
+								<div class="modal-content">
+									<div class="modal-header bg-blue-darker">
+										<h4 class="modal-title text-white">Seleccionar Itinerario</h4>
+									</div>
+									<div class="modal-body">
+										<form method="POST" id="tableItinerarioModal" action="">	
+											<div class="container">
+												<div class="row">
+													
+													<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Ruta de inicio</b></label><br>
+												        
+													    <select class="form-control" id="idRutaInicio" name="rutainicioModal">
+													      <option value=" ">[Seleccione Ruta]</option>
+													    </select>
+													   
+												 	</div>
+												 	<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Ruta Final</b></label><br>
+												        
+													    <select class="form-control" id="idRutaFinal" name="rutainicioModal">
+													      <option value=" ">[Seleccione Final]</option>
+													      
+													    </select>
+													   
+												 	</div>
+												 	<div class="form-group has-feedback col-md-4">	
+														<label for="exampleInputEmail1"><b>Horario</b></label><br>
+												        <i class="fas fa-clock form-control-feedback2"></i>
+													    <select class="form-control" id="idHorario" name="horario">
+															
+													      <option value=" ">[Seleccione Horario]</option>
+													      <option th:each="data:${horario}"   
+													      		th:utext="${data.horas}"
+													      		th:value="${data.codigo}"
+													      />
+													    </select>
+													   
+												 	</div>
+												 	
+													<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+														<button type="button" class="btn btn-primary" id="btn-buscarItinerario" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="bi bi-search"></i>
+					 									Buscar
+														</button>
+														<button type="button" class="btn btn-primary" id="btn-limpiarItinerariomodal" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="fas fa-sync"></i>
+					 									Limpiar
+														</button>													
+													<button type="button" class="btn btn-danger" id="btn-cerraritinerario"  data-dismiss="modal" style="margin-left: 10px; padding: 1em 2em;">
+														<i class="fas fa-times"></i>
+				 									Cerrar
+													</button>	
+													</div>
+													<table class="table table-bordered mt-5" id="tableItinerario">
+																  <thead>
+																   <tr>
+														                <th>Codigo</th>
+														                <th>Placa</th>
+														                <th>Ruta de inicio</th>
+														                <th>Ruta Final</th>
+														                <th>Fecha Partida</th>
+														                <th>Horario</th>
+														                <th></th>
+														            </tr>
+																  </thead>
+																  <tbody id="tbodyItinerario">
+																	<tr th:each="row:${itinerario}">
+																      <td th:text="${row.codigoBH}"></td>
+																      <td th:text="${row.buses.nroplaca}"></td>
+																      <td th:text="${row.buses.rutas.rutaInicio}"></td>
+																      <td th:text="${row.buses.rutas.rutaFinal}"></td>
+																      <td th:text="${row.dia}"></td>
+																      <td th:text="${row.horario.horas}"></td>
+																      <td><button type="button" class="btn btn-warning btn-datos-itinerario">
+					 														<i class="bi bi-file-ruled"></i>
+					 												 </button></td>
+																    </tr>  
+																  </tbody>
+													</table>
+												</div>
+											</div>																																					
+										</form>										
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--Fin del Modal de buses-->
+
+		
+	
+	</div>
+	<div th:insert="includes/UITemplate :: pie"></div>	
+	
+	<script th:inline="javascript"th:if="${MENSAJE!=null}" >
+		//Recuperar atributo mensaje
+		let msg=/*[[${MENSAJE}]]*/
+		toastr.success(msg, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+		
+	</script>
+		
+	<script>
+		//GLOBALES
+		
+		
+		$('#tableCliente').DataTable({		
+				"searching":false,
+				"lengthChange":false
+		});
+		
+		$('#tableItinerario').DataTable({		
+				"searching":false,
+				"lengthChange":false
+		});
+				
+		//-----CONSULTAS-----//
+		//-----CONSULTAS CLIENTE-----//		
+		$(document).on("keyup", "#idNombreModal", function () {
+			let nombre;
+			nombre = $("#idNombreModal").val();
+			//obtener el codigo del medicamento actual según el boton que se presiono			
+			$("#tableCliente tbody").empty();
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/pasaje/listaClienteNombreJSON?nombre=" + nombre, function (response) {
+				//Imprimir en los controles el valor del JSON
+				$.each(response,function(index,item){
+					$("#tableCliente tbody").append(`<tr><td>${item.codigo}</td><td>
+												${item.nombre}</td><td>
+												${item.apellido}</td><td>
+												${item.dni}</td><td>
+												${item.celular}</td><td>
+												<button type="button" class="btn btn-warning btn-datos-cliente">
+					 								<i class="fas fa-user-plus"></i>
+					 							</button>`);
+				})			
+			})	
+		})
+		
+		$(document).on("keyup", "#idDniModal", function () {
+			let dni;
+			dni = $("#idDniModal").val();
+			//obtener el codigo del medicamento actual según el boton que se presiono
+			
+			$("#tableCliente tbody").empty();
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/pasaje/listaClienteDniJSON?dni="+dni, function (response) {
+				//Imprimir en los controles el valor del JSON
+				$.each(response,function(index,item){
+					$("#tableCliente tbody").append(`<tr><td>${item.codigo}</td><td>
+												${item.nombre}</td><td>
+												${item.apellido}</td><td>
+												${item.dni}</td><td>
+												${item.celular}</td><td>
+												<button type="button" class="btn btn-warning btn-datos-cliente">
+					 								<i class="fas fa-user-plus"></i>
+					 							</button>`);
+				})
+			})	
+		})	
+							
+		//----RUTAS-----//
+		$.get("/ruta/listaInicio",function(datos){
+			$.each(datos,function(index,item){
+				$("#idRutaInicio").append("<option value='"+item+"'>"+item+"</option>");
+			})
+		});
+
+		$(document).on("change","#idRutaInicio",function(){
+			var inicio;
+			inicio=$(this).val();
+			
+			$("#idRutaFinal").empty();
+			$("#idRutaFinal").append("<option value=' '>[Seleccione Destino]</option>");
+			$.get("/ruta/listaFinal?inicio="+inicio,function(datos){
+			$.each(datos,function(index,item){
+				$("#idRutaFinal").append("<option value='"+item.rutaFinal+"'>"+item.rutaFinal+"</option>");
+			})
+		})
+		})
+		//----FIN RUTAS-----//
+		
+		
+		//CERRAR
+		$(document).on("click","#btn-cerrarItinerario",function(){
+				
+			$("#tableClienteModal").data("bootstrapValidator").resetForm(true);
+			$("#tableItinerario").trigger("reset");
+			
+			
+			$("#idRutaInicio").val(0);
+			$("#idHorario").value(0);					
+		})
+		
+		$(document).on("click","#btn-cerrarCliente",function(){				
+			$("#tableClienteModal").data("bootstrapValidator").resetForm(true);
+			$("#tableCliente").trigger("reset");						
+			$("#idNombreModal").trigger("keyup");
+					
+		})			
+		//CERRAR FIN
+		
+		//LIMPIAR
+		$(document).on("click","#btn-limpiarClientemodal",function(){
+			$("#tableClienteModal").data("bootstrapValidator").resetForm(true);
+			$("#tableCliente").trigger("reset");						
+			$("#idNombreModal").trigger("keyup");
+		})
+		$(document).on("click","#btn-limpiarItinerariomodal",function(){
+			$("#tableItinerario").trigger("reset");	
+			$("#idRutaInicio").prop("selectedIndex", 0);			
+			$("#idRutaFinal").empty();
+			$("#idRutaFinal").append("<option value=' '>[Seleccione Destino]</option>");
+			$("#idHorario").prop("selectedIndex", 0);
+
+		})	
+		//LIMPIAR FIN		
+		$(document).on("click","#btn-limpiar",function(){				
+			$("#idNombre").val("");	
+			$("#idApellidos").val("");	
+			$("#idDni").val("");	
+			$("#idDestino").val("");	
+			$("#idPlaca").val("");			
+		})
+		//----EXTRAENDO DATOS----//
+		$(document).on("click",".btn-datos-itinerario",function(){
+			let cod,pla,ini,fin,fech,hor;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			pla=$(this).parents("tr").find("td")[1].innerHTML;
+			ini=$(this).parents("tr").find("td")[2].innerHTML;
+			fin=$(this).parents("tr").find("td")[3].innerHTML;		
+			fech=$(this).parents("tr").find("td")[4].innerHTML;		
+			hor=$(this).parents("tr").find("td")[5].innerHTML;
+			$("#idCodigoItinerario").val(cod.trim());
+			$("#idPlaca").val(pla.trim());
+			$("#idDestino").val(ini.trim()+"-"+fin.trim());
+			$("#idVistaItinerario").empty();
+			$("#idVistaItinerario").append("<p>"+ini.trim()+"--->"+fin.trim()+"</p>"+
+										   "<p>FECHA PARTIDA</p>"+
+										   "<p>"+fech.trim()+" "+hor.trim()+"</p>");
+		})
+		
+		$(document).on("click",".btn-datos-cliente",function(){
+			let cod,nom,ape,dni;
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			nom=$(this).parents("tr").find("td")[1].innerHTML;
+			ape=$(this).parents("tr").find("td")[2].innerHTML;
+			dni=$(this).parents("tr").find("td")[3].innerHTML;	
+			$("#idCodigoCliente").val(cod.trim());
+			$("#idNombre").val(nom.trim());
+			$("#idApellidos").val(ape.trim());
+			$("#idDni").val(dni.trim());
+		})
+		
+	//----CONSULTAS ITINERARIO-----//				
+		$(document).on("click","#btn-buscarItinerario",function(){
+		let inicio,fin,hora;
+		inicio=$("#idRutaInicio").val();
+		final=$("#idRutaFinal").val();
+		hora=$("#idHorario").val();
+		$("#tableItinerario tbody").empty();
+		if(inicio != ' ' && final == ' ' && hora == ' '){			
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerarioInicio?inicio="+inicio,function(response){
+				$.each(response,function(index,item){				 							
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button>`);
+				})		
+				})
+		}
+		if(inicio == ' ' && final != ' ' && hora == ' '){		
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerarioFinal?final="+final,function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button>`);
+				})		
+				})	
+		}
+		if(inicio == ' ' && final == ' ' && hora != ' '){
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerarioHora?hora="+hora,function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button>`);
+				})		
+				})			
+		}
+		if(inicio != ' ' && final != ' ' && hora == ' '){
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerarioInicioFinal?inicio="+inicio+"&final="+final,function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button>`);
+				})		
+				})				
+		}
+		if(inicio != ' ' && final == ' ' && hora != ' '){
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerarioInicioHora?inicio="+inicio+"&hora="+hora,function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button>`);
+				})		
+				})				
+		}
+		if(inicio != ' ' && final != ' ' && hora != ' '){
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ConsultaItinerario?inicio="+inicio+"&final="+final+"&hora="+hora,function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button></td><<tr>`);
+					
+				})
+				})			
+		}
+		if(inicio == ' ' && final == ' ' && hora == ' '){
+			$("#tableItinerario tbody").empty();
+			$.get("/pasaje/ListarItinerarioJSON",function(response){
+				$.each(response,function(index,item){
+					$("#tableItinerario tbody").append(`<tr><td>${item.codigoBH}</td><td>
+													${item.buses.nroplaca}</td><td>
+													${item.buses.rutas.rutaInicio}</td><td>
+													${item.buses.rutas.rutaFinal}</td><td>
+													${item.dia}</td><td>
+													${item.horario.horas}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-itinerario">
+						 								<i class="bi bi-file-ruled"></i>
+						 							</button></td><<tr>`);
+				})		
+				})			
+		}
+		})
+		//-----FIN ITINERARIO-----//	
+		//----ASIENTOS-----//
+		$(document).on("click", "#btn-cargarAsientos", function() {
+	    let placa;
+	    $("#div-asientos-economicos-fila1").empty();
+	    $("#div-asientos-economicos-fila2").empty();
+	    $("#div-asientos-vip").empty();
+	    $("#div-asientos-ejecutivo").empty();
+	    placa = $("#idPlaca").val();
+	    $.get("/pasaje/ListarAsientosxPlacaJSON?placa=" + placa, function(response) {
+	        $.each(response, function(index, item) {
+	            if (index <= 5) {
+	                $("#div-asientos-economicos-fila1").append(`
+					    <div class="bus__content_side_box shadow-sm btn-asiento ${item.estado === 'Vendido' ? 'asiento-vendido' : ''}">
+					        <p class="shadow-sm" value="${item.codigo}">${item.numeroAsi}</p>
+					        <p hidden>${item.tipoAsiento.descripcion}</p>
+					        <p>S/${item.tipoAsiento.precio}</p>
+					    </div>`);
+	            }
+	            if (index > 5 && index <= 11) {
+	                $("#div-asientos-economicos-fila2").append(`
+	                     <div class="bus__content_side_box shadow-sm btn-asiento ${item.estado === 'Vendido' ? 'asiento-vendido' : ''}">
+	                        <p class="shadow-sm" value="${item.codigo}">${item.numeroAsi}</p>
+	                        <p hidden>${item.tipoAsiento.descripcion}</p>                
+	                        <p>S/${item.tipoAsiento.precio}</p>
+	                    </div>`);
+	            }
+	            if (index > 11 && index <= 27) {
+	                $("#div-asientos-vip").append(`
+	                    <div class="bus__content_side_box shadow-sm btn-asiento ${item.estado === 'Vendido' ? 'asiento-vendido' : ''}">
+	                        <p class="shadow-sm" value="${item.codigo}">${item.numeroAsi}</p>
+	                        <p hidden>${item.tipoAsiento.descripcion}</p>     
+	                        <p>S/${item.tipoAsiento.precio}</p>
+	                    </div>`);
+	            }
+	            if (index > 27) {
+	                $("#div-asientos-ejecutivo").append(`
+	                    <div class="bus__content_side_box shadow-sm btn-asiento ${item.estado === 'Vendido' ? 'asiento-vendido' : ''}">
+	                        <p class="shadow-sm" value="${item.codigo}">${item.numeroAsi}</p>
+	                        <p hidden>${item.tipoAsiento.descripcion}</p>
+	                        <p>S/${item.tipoAsiento.precio}</p>
+	                    </div>`);
+	            }
+	        });
+	
+	        // Agregar evento mouseover y mouseout para cambiar el color del asiento
+	       $(".btn-asiento").mouseover(function() {
+			    $(this).css({
+			        "background-color": "#2E86C1",  // Azul claro en formato hexadecimal
+			        "color": "white"  // Color de letra blanco
+			    });
+				}).mouseout(function() {
+				    $(this).css({
+				        "background-color": "",  // Restaurar el color original
+				        "color": ""  // Restaurar el color original de la letra
+				});		
+			});
+			// Agregar evento click para mantener el color del asiento al ser presionado
+	        $(".btn-asiento").on("click", function() {
+	            $(this).toggleClass("asiento-seleccionado");
+	        });
+	
+	        /* Restablecer el color original de todos los asientos al hacer clic en otro lugar de la página
+	        $(document).on("click", function(event) {
+	            if (!$(event.target).closest(".btn-asiento").length) {
+	                $(".btn-asiento").removeClass("asiento-seleccionado");
+	            }
+	        });*/
+        
+	    });
+	});
+	
+		//----FIN ASIENTOS-----//
+		
+		//-----ADICIONAR y ELIMINAR ASIENTOS-----//
+		$(document).on("click", ".btn-asiento", function() {
+	    var importe = 0;
+	    var codigo = $(this).find("p").eq(0).attr("value");
+	    var numeroAsi = $(this).find("p").eq(0).text();
+	    var tipo = $(this).find("p").eq(1).text();
+	    var precio = parseFloat($(this).find("p").eq(2).text().slice(2)); // Convertir el precio a tipo numérico
+	    
+	    console.log("Código:", codigo);
+	    console.log("Número de asiento:", numeroAsi);
+	    console.log("Tipo de asiento:", tipo);
+	    console.log("Precio:", precio);
+	    
+
+	    $("#idImporte").empty();
+	   	$("#asiento").empty();
+	    if (!$(this).hasClass("selected")) {
+	        $.get("/pasaje/adicionar?codigo=" + codigo + "&numAsiento=" + numeroAsi + "&tipo=" + tipo + "&precio=" + precio, function(response) {
+			console.log("AGREGADO"+response);
+	            $.each(response, function(index, item) {
+	                $("#asiento").append(`<p hidden>${item.codigo}</p>
+	                                      Asiento: ${item.numAsiento} - ${item.precio} - ${item.tipoAsiento}`);
+	                importe += item.precio;
+	            });
+	            console.log(response);
+	            console.log("Este es el importe = " + importe);
+	            $("#idImporte").val(importe);
+	        });
+	        
+	        $(this).addClass("selected"); // Agregar clase "selected" al asiento seleccionado
+	    } else {
+	        $.get("/pasaje/eliminar?codigo=" + codigo, function(response) {
+	            console.log("ELIMINADO"+response);
+	            $.each(response, function(index, item) {
+	                $("#asiento").append(`<p hidden>${item.codigo}</p>
+	                                      Asiento: ${item.numAsiento} - ${item.precio} - ${item.tipoAsiento}`);
+	                importe += item.precio;
+	            });
+	            $("#idImporte").val(importe);
+	        });
+	        
+	        $(this).removeClass("selected"); // Quitar clase "selected" del asiento deseleccionado
+	    }
+	});
+		//-----FIN ADICIONAR Y ELIMINAR ASIENTOS-----//
+
+	
+	
+		
+	</script>
+	
+	<script type="text/javascript">    
+	    $(document).ready(function(){     
+	
+	        $('#tableClienteModal').bootstrapValidator({     
+	        	feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	        	 fields:{
+	        	
+	        		Nombres: {
+	     	    		selector:'#idNombreModal',   
+	                    validators: {
+	                        regexp: {    
+	                            regexp: /^[A-Za-záéíóúñÁÉÍÓÚÑ\s]{0,30}$/,    
+	                            message: 'Campo nombre solo acepta letras MAX : 30',      
+	                        },      
+	                    }    
+	                },
+	                
+	                Dni: {
+	     	    		selector:'#idDniModal',   
+	                    validators: { 
+	                        regexp: {    
+	                            regexp: /^[0-9]{0,8}$/,    
+	                            message: 'Campo DNI solo acepta digitos MAX : 8'    
+	                        },      
+	                    }    
+	                }
+					 
+					 
+	              
+	        	 }
+	        })					
+	    });    
+	</script>
+
+</body>
+</html>
